@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Appointment System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- TOAST: TOP RIGHT -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 20000;">
+    <div id="mainToast" class="toast text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex"> 
+            <div id="toastText" class="toast-body">Hello World</div>
+            <button class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<!-- BOOTSTRAP JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+   
+</script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-radius: 16px !important;
+            padding: 16px 24px !important;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 24px !important;
+            font-weight: 700;
+            color: #1a1a1a !important;
+        }
+
+        .btn-danger {
+            background: #ff4757 !important;
+            border: none !important;
+            border-radius: 12px !important;
+            padding: 10px 20px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s !important;
+        }
+
+        .btn-danger:hover {
+            background: #ee5a6f !important;
+            transform: translateY(-2px);
+        }
+
+        #loginPage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 85vh;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 440px;
+            width: 100%;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-header h4 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        #loginPage .form-control {
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            margin-bottom: 16px;
+        }
+
+        #loginPage .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        #loginPage .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 12px;
+        }
+
+        #loginPage .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        #loginPage .btn-success {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #loginPage .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        #loginMsg {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 16px;
+        }
+
+        #patientDashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .patient-header {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .patient-header h4 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .patient-header p {
+            color: #666;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .section-title {
+            background: white;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title h5 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .department-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            height: 100%;
+        }
+
+        .department-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .department-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .department-card h6 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .department-card p {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .doctor-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            border-left: 4px solid #667eea;
+        }
+
+        .doctor-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .doctor-info h6 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .doctor-info p {
+            color: #666;
+            font-size: 14px;
+            margin: 2px 0;
+        }
+
+        .btn-book-appointment {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-book-appointment:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .slot-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .slot-item:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            transform: translateY(-2px);
+        }
+
+        .slot-item.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .slot-time {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .slot-date {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .booking-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #667eea;
+        }
+
+        .booking-card h6 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .booking-card p {
+            color: #666;
+            font-size: 14px;
+            margin: 4px 0;
+        }
+
+        .booking-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        #doctorDashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-header h4 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .dashboard-header p {
+            color: #666;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .card-custom {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header-custom {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card-title-custom {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        .slot-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        #doctorDashboard .form-control,
+        #doctorDashboard .form-select {
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        #doctorDashboard .form-control:focus,
+        #doctorDashboard .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: none;
+        }
+
+        #doctorDashboard .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-bottom: 12px;
+        }
+
+        #doctorDashboard .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        #doctorDashboard .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-bottom: 12px;
+        }
+
+        #doctorDashboard .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        #slotMsg {
+            color: #667eea;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 12px;
+        }
+
+        .slots-container {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+
+        .slots-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .slots-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .slots-container::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .slot-item-wrapper {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+            transition: all 0.3s;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slot-item-wrapper:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .slot-info-text {
+            flex: 1;
+        }
+
+        .btn-delete-slot {
+            padding: 8px 16px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-delete-slot:hover {
+            background: #ee5a6f;
+            transform: scale(1.05);
+        }
+
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            border-bottom: 2px solid #f0f0f0;
+            padding: 24px;
+        }
+
+        .modal-header h5 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-body .form-control,
+        .modal-body .form-select {
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s;
+            margin-bottom: 16px;
+        }
+
+        .modal-body .form-control:focus,
+        .modal-body .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .modal-footer {
+            border-top: 2px solid #f0f0f0;
+            padding: 24px;
+        }
+
+        .modal-footer .btn-success {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .modal-footer .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        .modal-body .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 16px;
+        }
+
+        .modal-body .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        #regMsg {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .slot-booked{
+            background-color: #d4ebba;
+            border-left: 4px solid #28a745;
+            color: #155724;
+        }
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .slot-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .login-container {
+                padding: 32px 24px;
+            }
+
+            .doctor-item {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-light bg-light mb-4 px-3">
+        <span class="navbar-brand d-flex align-items-center">
+            <img src="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" 
+                 width="30" class="me-2">
+            <strong>Hospital System</strong>
+        </span>
+    
+        <!-- RIGHT SIDE USER SECTION -->
+        <div class="d-flex align-items-center d-none" id="userSection">
+            <span id="welcomeText" class="text-dark me-3 fw-bold"></span>
+    
+            <!-- PROFILE DROPDOWN -->
+            <div class="dropdown">
+                <img id="profileIcon"
+                     src="https://cdn-icons-png.flaticon.com/512/9073/9073117.png"
+                     width="38"
+                     height="38"
+                     data-bs-toggle="dropdown"
+                     style="cursor:pointer; border-radius:50%;">
+    
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><h6 class="dropdown-header" id="dropdownUserName">User</h6></li>
+                    <li><a class="dropdown-item" href="#" onclick="openProfile()">Edit Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="#" onclick="logout()">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+
+<!-- LOGIN PAGE -->
+<div id="loginPage">
+    <div class="login-container">
+        <div class="login-header">
+            <h4>Welcome Back</h4>
+            <p>Sign in to access your account</p>
+        </div>
+
+        <input id="login_mobile" class="form-control" placeholder="Mobile Number">
+        <input id="login_password" type="password" class="form-control" placeholder="Password">
+        <button class="btn btn-primary" onclick="login()">Login</button>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
+        <p id="loginMsg" class="text-danger"></p>
+        <p class="text-center mt-2">
+            <a href="#" onclick="openForgotModal()">Forgot Password?</a>
+        </p>
+        
+    </div>
+</div>
+
+<!-- PATIENT DASHBOARD -->
+<div id="patientDashboard" class="d-none container mt-4">
+    <div class="section-title">
+        <h5>
+            <span class="section-icon">🏥</span>
+            Departments
+        </h5>
+    </div>
+    <div id="departmentContainer" class="row g-3 mb-4"></div>
+
+    <div class="section-title mt-5">
+        <h5>
+            <span class="section-icon">📋</span>
+            My Bookings
+        </h5>
+    </div>
+    <div id="bookingsContainer"></div>
+</div>
+
+<!-- DOCTOR LIST MODAL -->
+<div class="modal fade" id="doctorModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="doctorModalTitle"></h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="doctorList"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLOT MODAL -->
+<div class="modal fade" id="slotModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="slotModalTitle">Select Available Slot</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="slotContainer" class="row g-3"></div>
+                <button class="btn btn-primary" onclick="proceedToBooking()" style="display:none;" id="proceedBookingBtn">
+                    Proceed to Booking
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- BOOKING CONFIRMATION MODAL -->
+<div class="modal fade" id="bookingModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Confirm Booking</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="bookingInfo" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 16px; border-radius: 12px; margin-bottom: 16px; border-left: 4px solid #667eea;"></div>
+                <input id="booking_name" class="form-control" placeholder="Patient Name" value="">
+                <input id="booking_mobile" class="form-control" placeholder="Mobile Number" value="">
+                <input id="booking_reason" class="form-control" placeholder="Reason" value="">
+                <p id="bookingMsg" class="text-danger"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" onclick="confirmBooking()">Confirm Booking</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DOCTOR DASHBOARD -->
+<div id="doctorDashboard" class="d-none">
+
+    <div class="dashboard-grid">
+        <div class="card-custom">
+            <div class="card-header-custom">
+                <div class="card-icon">📅</div>
+                <h6 class="card-title-custom">Create Slots</h6>
+            </div>
+
+            <div class="slot-controls">
+                <input type="date" id="slotDate" class="form-control">
+                <select id="slotDuration" class="form-select">
+                    <option value="20">20 Minutes</option>
+                    <option value="30">30 Minutes</option>
+                    <option value="45">45 Minutes</option>
+                    <option value="60">60 Minutes</option>
+                </select>
+                <input type="time" id="slotStartTime" class="form-control">
+                <input type="time" id="slotEndTime" class="form-control">
+            </div>
+
+            <button class="btn btn-primary" onclick="createSlots()">Create Single Day Slots</button>
+            <button class="btn btn-secondary" onclick="weekSlots()">Create Whole Week Slots</button>
+
+            <p id="slotMsg"></p>
+        </div>
+
+        <div class="card-custom">
+            <div class="card-header-custom">
+                <div class="card-icon">🕐</div>
+                <h6 class="card-title-custom">My Slots</h6>
+            </div>
+            <div class="slots-container">
+                <div id="doctorSlotsContainer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- REGISTER MODAL -->
+<div class="modal fade" id="registerModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Create Account</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input id="r_name" class="form-control" placeholder="Full Name">
+                <input id="r_email" class="form-control" placeholder="Email Address">
+                <input id="r_mobile" class="form-control" placeholder="Mobile Number">
+                <input id="r_password" type="password" class="form-control" placeholder="Password">
+
+                <select id="r_role" class="form-select" onchange="toggleDoctorFields()">
+                    <option value="">Select Role</option>
+                    <option value="PATIENT">Patient</option>
+                    <option value="DOCTOR">Doctor</option>
+                </select>
+
+                <div id="doctorFields" class="d-none">
+                    <input id="r_department" class="form-control" placeholder="Department">
+                    <input id="r_drCode" class="form-control" placeholder="Doctor Code">
+                </div>
+
+                <p id="regMsg" class="text-danger"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" onclick="register()">Register</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal fade" id="profileModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Edit Profile</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <input id="p_name" class="form-control mb-2" placeholder="Full Name">
+                <input id="p_email" class="form-control mb-2" placeholder="Email Address">
+                <input id="p_mobile" class="form-control mb-2" placeholder="Mobile Number">
+                <input id="p_password" class="form-control mb-2" placeholder="New Password (optional)">
+                <p id="profileMsg" class="text-danger"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-success" onclick="saveProfile()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div class="modal fade" id="forgotModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h5>Forgot Password</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+  
+        <div class="modal-body">
+          <input id="f_email" class="form-control mb-2" placeholder="Enter Registered Email">
+          <p id="forgotMsg" class="text-danger"></p>
+        </div>
+  
+        <div class="modal-footer">
+          <button class="btn btn-primary" onclick="sendResetLink()">
+            Send Reset Link
+          </button>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  
+<script>
+
+    function showToast(message, type = "success") {
+    const toast = document.getElementById("mainToast");
+    const toastText = document.getElementById("toastText");
+    toast.className = `toast text-white bg-${type} border-0`;
+    toastText.innerText = message;
+    const toastInstance = bootstrap.Toast.getOrCreateInstance(toast);
+    toastInstance.show();
+}
+
+    let currentUser = null;
+    let selectedSlot = null;
+    let selectedDoctor = null;
+
+    const departmentIcons = {
+        'Cardiology': '❤️',
+        'Neurology': '🧠',
+        'Orthopedics': '🦴',                                                                                                
+        'Pediatrics': '👶',
+        'Dermatology': '🧴',
+        'Ophthalmology': '👁️',
+        'ENT': '👂',
+        'Dentistry': '🦷',
+        'General': '🩺',
+        'Surgery': '🔬'
+    };
+
+    function getDepartmentIcon(dept) {
+        return departmentIcons[dept] || '🏥';
+    }
+
+    /* ================= HELPER ================= */
+    function generateTimeSlots(start, end, duration) {
+        const slots = [];
+        let [sh, sm] = start.split(":").map(Number);
+        let [eh, em] = end.split(":").map(Number);
+
+        let startMin = sh * 60 + sm;
+        const endMin = eh * 60 + em;
+
+        while (startMin + duration <= endMin) {
+            const h1 = Math.floor(startMin / 60);
+            const m1 = startMin % 60;
+            const h2 = Math.floor((startMin + duration) / 60);
+            const m2 = (startMin + duration) % 60;
+
+            slots.push(
+                `${String(h1).padStart(2,"0")}:${String(m1).padStart(2,"0")}-` +
+                `${String(h2).padStart(2,"0")}:${String(m2).padStart(2,"0")}`
+            );
+            startMin += duration;
+        }
+        return slots;
+    }
+
+    /* ================= AUTH ================= */
+    function login() {
+        $.ajax({
+            url: "/user/login",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                mobile: $("#login_mobile").val(),
+                password: $("#login_password").val()
+            }),
+            success: user => {
+                currentUser = user;
+
+                $("#loginPage").hide();
+                $("#userSection").removeClass("d-none");
+
+                $("#dropdownUserName").text(user.name);
+                $("#welcomeText").text(`Welcome back ${user.role === "DOCTOR" ? "Dr. " : ""}${user.name}`);
+
+                if (user.role === "PATIENT") {
+                    $("#patientDashboard").removeClass("d-none");
+                    loadDepartments();
+                    loadMyBookings();
+                    showToast(`Welcome back ${user.name}`, "success")
+                } else {
+                    $("#doctorDashboard").removeClass("d-none");
+                    loadDoctorSlots();
+                    showToast(`Welcome back Dr.${user.name}`,"success")
+                }
+            },
+            error: () => showToast("Invalid credential", "danger")
+        });
+    }
+
+    function register() {
+        $.ajax({
+            url: "/user/login",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                name: $("#r_name").val(),
+                email: $("#r_email").val(),
+                mobile: $("#r_mobile").val(),
+                password: $("#r_password").val(),
+                role: $("#r_role").val(),
+                department: $("#r_department").val(),
+                drCode: $("#r_drCode").val()
+            }),
+            success: () => {
+                bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
+                showToast("Register Successfully", "success")
+                location.reload();
+            },
+            error: ()=>showToast("Registration Failed", "danger")
+        });
+    }
+
+    function toggleDoctorFields() {
+        $("#doctorFields").toggleClass("d-none", $("#r_role").val() !== "DOCTOR");
+    }
+
+    function logout() {
+        location.reload();
+    }
+
+    /* ================= New Logic ================= */
+    $(document).ready(function () {
+
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    if (token) {
+        openResetModal(token);
+    }
+
+});
+    /* ================= End of logic ================= */
+
+    /* ================= PATIENT - DEPARTMENTS ================= */
+    function loadDepartments() {
+    $.get("/slot/department", departments => {
+            let html = "";
+            departments.forEach(dept => {
+                html += `
+                    <div class="col-md-4 col-sm-6">
+                        <div class="department-card" onclick="showDoctors('${dept}')">
+                            <div class="department-icon">${getDepartmentIcon(dept)}</div>
+                            <h6>${dept}</h6>
+                            <p>Click to view doctors</p>
+                        </div>
+                    </div>
+                `;
+            });
+            $("#departmentContainer").html(html || '<div class="empty-state"><div class="empty-state-icon">🏥</div><p>No departments available</p></div>');
+        }).fail(() => {
+            $("#departmentContainer").html('<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Failed to load departments</p></div>');
+        });
+    }
+
+    /* ================= PATIENT - DOCTORS ================= */
+    function showDoctors(department) {
+        $("#doctorModalTitle").text(department + " - Doctors");
+        
+        $.get(`/doctor/department/${department}`, doctors => {
+            let html = "";
+            if (doctors && doctors.length > 0) {
+                doctors.forEach(doc => {
+                    html += `
+                        <div class="doctor-item">
+                            <div class="doctor-info">
+                                <h6>Dr. ${doc.name}</h6>
+                                <p>📧 ${doc.email || 'N/A'}</p>
+                                <p>📱 ${doc.mobile}</p>
+                                <p>🏥 ${doc.department}</p>
+                            </div>
+                            <button class="btn-book-appointment" onclick="showSlots(${doc.id}, '${doc.name}')">
+                                Book Appointment
+                            </button>
+                        </div>
+                    `;
+                });
+            } else {
+                html = '<div class="empty-state"><div class="empty-state-icon">👨‍⚕️</div><p>No doctors available in this department</p></div>';
+            }
+            $("#doctorList").html(html);
+            new bootstrap.Modal(document.getElementById('doctorModal')).show();
+        }).fail(() => {
+            $("#doctorList").html('<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Failed to load doctors</p></div>');
+            new bootstrap.Modal(document.getElementById('doctorModal')).show();
+        });
+    }
+
+    /* ================= PATIENT - SLOTS ================= */
+    function showSlots(doctorId, doctorName) {
+        selectedDoctor = { id: doctorId, name: doctorName };
+        selectedSlot = null;
+        $("#slotModalTitle").text(`Available Slots - Dr. ${doctorName}`);
+        $("#proceedBookingBtn").hide();
+        
+        bootstrap.Modal.getInstance(document.getElementById('doctorModal')).hide();
+        
+        $.get(`/slot/doctor/${doctorId}`, slots => {
+            let html = "";
+            if (slots && slots.length > 0) {
+                const availableSlots = slots.filter(s => !s.booked);
+                
+                if (availableSlots.length > 0) {
+                    availableSlots.forEach(slot => {
+                        html += `
+                            <div class="col-md-4 col-sm-6">
+                                <div class="slot-item" onclick="selectSlot(this, ${slot.id}, '${slot.slotDate}', '${slot.day}', '${slot.timeSlot}')">
+                                    <div class="slot-time">${slot.timeSlot}</div>
+                                    <div class="slot-date">${slot.slotDate} (${slot.day})</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    html = '<div class="col-12"><div class="empty-state"><div class="empty-state-icon">📅</div><p>No available slots</p></div></div>';
+                }
+            } else {
+                html = '<div class="col-12"><div class="empty-state"><div class="empty-state-icon">📅</div><p>No slots created yet</p></div></div>';
+            }
+            
+            $("#slotContainer").html(html);
+            new bootstrap.Modal(document.getElementById('slotModal')).show();
+        }).fail(() => {
+            $("#slotContainer").html('<div class="col-12"><div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Failed to load slots</p></div></div>');
+            new bootstrap.Modal(document.getElementById('slotModal')).show();
+        });
+    }
+
+    function selectSlot(el ,slotId, date, day, time) {
+        $(".slot-item").removeClass("selected");
+        el.classList.add("selected");
+        
+        selectedSlot = {
+            id: slotId,
+            date: date,
+            day: day,
+            time: time
+        };
+        
+        $("#proceedBookingBtn").show();
+    }
+
+    function proceedToBooking() {
+        if (!selectedSlot) {
+            alert("Please select a slot");
+            return;
+        }
+        
+        bootstrap.Modal.getInstance(document.getElementById('slotModal')).hide();
+        
+        $("#bookingInfo").html(`
+            <p style="margin: 0; color: #1a1a1a;"><strong>Doctor:</strong> Dr. ${selectedDoctor.name}</p>
+            <p style="margin: 4px 0; color: #1a1a1a;"><strong>Date:</strong> ${selectedSlot.date} (${selectedSlot.day})</p>
+            <p style="margin: 4px 0 0 0; color: #1a1a1a;"><strong>Time:</strong> ${selectedSlot.time}</p>
+        `);
+        
+        $("#booking_name").val(currentUser.name || "");
+        $("#booking_mobile").val(currentUser.mobile || "");
+        $("#bookingMsg").text("");
+
+        $("#booking_name").show();
+        $("#booking_mobile").show();
+        $("#booking_reason").show();
+        $("#bookingMsg").show();
+        $(".modal-footer").show();
+
+        
+        new bootstrap.Modal(document.getElementById('bookingModal')).show();
+    }
+
+    /* ================= PATIENT - BOOKING ================= */
+    function confirmBooking() {
+        const patientName = $("#booking_name").val();
+        const patientMobile = $("#booking_mobile").val();
+        const patientReason = $("#booking_reason").val();
+        
+        if (!patientName || !patientMobile || !patientReason) {
+            $("#bookingMsg").text("Please fill all fields"); 
+            return;
+        }
+        
+        $.ajax({
+            url: "/appointment/book",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                patientId: currentUser.id,
+                doctorId: selectedDoctor.id,
+                slotId: selectedSlot.id,
+                reason: patientReason
+            }),
+            success: () => {
+                bootstrap.Modal.getInstance(document.getElementById('bookingModal')).hide();
+                showToast("Appointment Booked Succesfully & Check Your Email for details", "success");
+                loadMyBookings();
+            },
+            error: () => showToast("Booking failed. Please try again.")
+        });
+    }
+
+    function loadMyBookings() {
+        $.get(`/appointment/my/${currentUser.id}`, bookings => {
+            let html = "";
+            if (bookings && bookings.length > 0) {
+                bookings.forEach(b => {
+                    html += `
+                        <div class="booking-card" id="appointment-${b.id}">
+                            <h6>Dr. ${b.doctorName || 'N/A'}</h6>
+                            <p><strong>Date:</strong> ${b.slotDate} (${b.day})</p>
+                            <p><strong>Time:</strong> ${b.timeSlot}</p>
+                            <p><strong>Department:</strong> ${b.department || 'N/A'}</p>
+                            <p><strong>Reason:</strong> ${b.reason}</p>
+                            ${
+                                b.status && b.status.trim().toUpperCase() === "BOOKED"
+                                ? `<button class="btn btn-danger btn-sm mt-2"
+                                    onclick="cancelAppointment(${b.id})">
+                                    Cancel Appointment
+                                </button>`
+                                : ""
+                            }
+                        </div>
+                    `;
+                });
+            } else {
+                html = '<div class="empty-state"><div class="empty-state-icon">📋</div><p>No bookings yet</p></div>';
+            }
+            $("#bookingsContainer").html(html);
+        }).fail(() => {
+            $("#bookingsContainer").html('<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Failed to load bookings</p></div>');
+        });
+    }
+
+            /* ================= DOCTOR ================= */
+        function createSlots() {
+            const date = $("#slotDate").val();
+            const start = $("#slotStartTime").val();
+            const end = $("#slotEndTime").val();
+            const duration = parseInt($("#slotDuration").val());
+
+            console.log("DATE:", date, "START:", start, "END:", end, "DURATION:", duration);
+
+            // EMPTY FIELD CHECK
+            if (!date || !start || !end) {
+                showToast("Please fill all fields", "danger");
+                return;
+            }
+
+            // CONVERT TO MINUTES
+            const [sh, sm] = start.split(":").map(Number);
+            const [eh, em] = end.split(":").map(Number);
+            const startMin = sh * 60 + sm;
+            const endMin = eh * 60 + em;
+
+            console.log("START IN MIN:", startMin, "END IN MIN:", endMin);
+
+            // INVALID TIME CHECK
+            if (startMin >= endMin) {
+                console.error("INVALID TIME");
+                showToast("Enter valid time", "danger");
+                return;
+            }
+
+            // VALIDATE DURATION
+            if (endMin - startMin < duration) {
+                showToast("INVALID DURATION", "danger");
+                return;
+            }
+
+            const drId = currentUser.id;
+
+            const slots = generateTimeSlots(start, end, duration);
+            console.log("Generated Slots:", slots);
+
+            if (slots.length === 0) {
+                showToast("No valid slot found. Adjust time.", "danger");
+                return;
+            }
+
+            let done = 0;
+
+            slots.forEach(slot => {
+                $.ajax({
+                    url: "/slot/create",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        drId: drId,
+                        slotDate: date,
+                        timeSlot: slot,
+                        mode: "SINGLE"
+                    }),
+                    success: () => {
+                        done++;
+                        if (done === slots.length) {
+                            loadDoctorSlots();
+                            showToast("Slot created successfully", "success");
+                        }
+                    },
+                    error: () => showToast("Slot already exists", "danger")
+                });
+            });
+        }
+
+
+    function weekSlots() {
+        const start = $("#slotStartTime").val();
+        const end = $("#slotEndTime").val();
+        const duration = parseInt($("#slotDuration").val());
+
+        if (!start || !end) {
+            $("#slotMsg").text("Please fill all fields");
+            return;
+        }
+
+        const timeStrings = generateTimeSlots(start, end, duration);
+        const today = new Date();
+        const mondayOffset = today.getDay() === 0 ? -6 : 1 - today.getDay();
+        const monday = new Date(today);
+        monday.setDate(today.getDate() + mondayOffset);
+
+        const allSlots = [];
+
+        for (let i = 0; i < 6; i++) {
+            const d = new Date(monday);
+            d.setDate(monday.getDate() + i);
+            const dateStr = d.toISOString().split("T")[0];
+
+            timeStrings.forEach(time => {
+                allSlots.push({
+                    drId: currentUser.id,
+                    slotDate: dateStr,
+                    timeSlot: time,
+                    mode: "WEEK"
+                });
+            });
+        }
+
+        $.ajax({
+            url: "/slot/create-bulk",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(allSlots),
+            success: () => {
+                loadDoctorSlots();
+                $("#slotMsg").text("✓ Week slots created successfully");
+                setTimeout(() => $("#slotMsg").text(""), 3000);
+            },
+            error: () => $("#slotMsg").text("Failed to create week slots")
+        });
+    }
+
+    function loadDoctorSlots() {
+    $.get(`/slot/doctor/${currentUser.id}`, slots => {
+        let html = "";
+        if (slots && slots.length > 0) {
+            slots.forEach(s => {
+                
+                // If booked → green class
+                const bookedClass = s.booked ? "slot-booked" : "";
+
+                html += `
+                    <div class="slot-item-wrapper ${bookedClass}">
+                        <span class="slot-info-text">
+                            ${s.slotDate} (${s.day}) ${s.timeSlot}
+                        </span>
+
+                        ${
+                            s.booked 
+                            ? `<button class="btn btn-info btn-sm" onclick="viewDetails(${s.id})">View Details</button>`
+                            : `<button class="btn-delete-slot" onclick="deleteSlot(${s.id})">Delete</button>`
+                        }
+                    </div>
+                `;
+            });
+        } else {
+            html = '<div class="empty-state"><div class="empty-state-icon">📅</div><p>No slots created</p></div>';
+        }
+
+        $("#doctorSlotsContainer").html(html);
+    }).fail(() => {
+        $("#doctorSlotsContainer").html('<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Failed to load slots</p></div>');
+    });
+}
+function viewDetails(slotId){
+    $.get(`/appointment/slot-details/${slotId}`, details => {
+
+        let html = `
+            <p><strong>Patient:</strong> ${details.patientName}</p>
+            <p><strong>Mobile:</strong> ${details.patientMobile}</p>
+            <p><strong>Reason:</strong> ${details.reason}</p>
+            <hr>
+            <p><strong>Date:</strong> ${details.slotDate}</p>
+            <p><strong>Time:</strong> ${details.timeSlot}</p>
+        `;
+
+        $("#bookingInfo").html(html);
+
+        $("#booking_name").hide();
+        $("#booking_mobile").hide();
+        $("#booking_reason").hide();
+        $("#bookingMsg").hide();
+        $(".modal-footer").hide(); 
+
+        new bootstrap.Modal(document.getElementById('bookingModal')).show();
+    });
+}
+
+    function deleteSlot(slotId) {
+        if (!confirm("Are you sure you want to delete this slot?")) return;
+
+        $.ajax({
+            url: `/slot/delete/${slotId}`,
+            type: "DELETE",
+            success: () => {
+                loadDoctorSlots();
+                $("#slotMsg").text("✓ Slot deleted successfully");
+                setTimeout(() => $("#slotMsg").text(""), 3000);
+            },
+            error: () => $("#slotMsg").text("Failed to delete slot")
+        });
+    }
+
+    function cancelAppointment(appointmentId) {
+    if (!confirm("Are you sure you want to cancel this appointment?")) return;
+
+    $.ajax({
+    url: `/appointment/cancel/${appointmentId}/${currentUser.id}`,
+    type: "PUT",
+    success: () => {
+        const card = document.getElementById("appointment-" + appointmentId);
+
+        if (card) {
+            card.style.transition = "0.3s";   
+            card.style.opacity = "0";
+
+            setTimeout(() => {
+                card.remove();
+            }, 300);
+        }
+
+        showToast("Appointment cancelled successfully", "success");
+        loadMyBookings();
+    },
+    error: () => {
+        showToast("Failed to cancel appointment", "danger");
+    }
+});
+    }
+function openProfile() {
+    $("#p_name").val(currentUser.name);
+    $("#p_email").val(currentUser.email);
+    $("#p_mobile").val(currentUser.mobile);
+    $("#p_password").val("");
+
+    $("#profileMsg").text("");
+
+    new bootstrap.Modal(document.getElementById("profileModal")).show();
+}
+function openForgotModal(){
+  new bootstrap.Modal(
+      document.getElementById('forgotModal')
+  ).show();
+}
+
+function sendResetLink(){
+
+  $.ajax({
+    url: "/user/ForgotPassword",
+    type: "POST",
+    contentType: "application/json",
+
+    data: JSON.stringify({
+      email: $("#f_email").val()
+    }),
+
+    success: res => {
+
+      bootstrap.Modal.getInstance(
+        document.getElementById('forgotModal')
+      ).hide();
+
+      showToast("Reset link sent to your email");
+
+    },
+
+    error: err => {
+      showToast(err.responseText || "Failed to send mail", "danger");
+    }
+  })
+}
+
+function saveProfile() {
+    const updated = {
+        id: currentUser.id,
+        name: $("#p_name").val(),
+        email: $("#p_email").val(),
+        mobile: $("#p_mobile").val(),
+        password: $("#p_password").val()
+    };
+
+    $.ajax({
+        url: `/user/update/${currentUser.id}`,
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify(updated),
+
+        success: (data) => {
+            currentUser = data;
+
+            $("#dropdownUserName").text(data.name);
+            $("#welcomeText").text(`Welcome back ${data.name}`);
+
+            showToast("Profile Updated Successfully!");
+
+            bootstrap.Modal.getInstance(document.getElementById("profileModal")).hide();
+        },
+
+        error: () => {
+            $("#profileMsg").text("Failed to update profile.");
+        }
+    });
+}
+
+// ========== AUTO OPEN RESET MODAL IF TOKEN IN URL ==========
+
+$(document).ready(function () {
+
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    if (token) {
+        openResetModal(token);
+    }
+
+});
+
+function openResetModal(token) {
+
+let html = `
+<div class="modal fade" id="resetModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5>Reset Password</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <input id="rp_pass" type="password"
+               class="form-control mb-2"
+               placeholder="New Password">
+
+        <input id="rp_confirm" type="password"
+               class="form-control mb-2"
+               placeholder="Confirm Password">
+
+        <p id="rp_msg"></p>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary"
+                onclick="submitReset('${token}')">
+          Update Password
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>`;
+
+$("body").append(html);
+
+new bootstrap.Modal(
+    document.getElementById("resetModal")
+).show();
+}
+
+function submitReset(token) {
+
+    const p1 = $("#rp_pass").val();
+    const p2 = $("#rp_confirm").val();
+
+    if (p1 !== p2) {
+        $("#rp_msg").css("color","red")
+            .text("Password not match");
+        return;
+    }
+
+    $.ajax({
+        url: "/user/ResetPassword",
+        type: "POST",
+        contentType: "application/json",
+
+        data: JSON.stringify({
+            token: token,
+            newPassword: p1
+        }),
+
+        success: res => {
+
+            let modal = bootstrap.Modal.getInstance(
+                document.getElementById("resetModal")
+            );
+            modal.hide();
+
+            setTimeout(() => {
+
+                $(".modal-backdrop").remove();
+                $("body").removeClass("modal-open");
+                $("body").css("overflow", "auto");
+
+            }, 300);
+
+            showToast("Password updated successfully");
+
+            // optional focus login
+            $("#login_mobile").focus();
+        },
+
+        error: err => {
+            showToast(err.responseText || "Reset failed", "danger");
+        }
+    });
+}
+
+</script>
+</body>
+</html>
