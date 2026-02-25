@@ -6,9 +6,12 @@ import com.example.hospital.Module.weekDays;
 import com.example.hospital.Repository.SlotRepository;
 import com.example.hospital.Module.DoctorDetails;
 import com.example.hospital.Repository.DrRepository;
+import org.aspectj.weaver.patterns.ConcreteCflowPointcut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -47,6 +50,11 @@ public class SlotService {
                 )
         );
 
+        if (dto.getTimeSlot() != null && dto.getTimeSlot().contains("-")) {
+            String[] parts = dto.getTimeSlot().split("-");
+            slot.setStartTime(LocalTime.parse(parts[0].trim()));
+            slot.setEndtime(LocalTime.parse(parts[1].trim()));
+        }
         slot.setTimeSlot(dto.getTimeSlot());
         slot.setMode(dto.getMode());
         slot.setDoctor(doctor);
@@ -66,7 +74,7 @@ public class SlotService {
     // ================= GET DOCTOR SLOTS =================
     @Transactional(readOnly = true)
     public List<UserSlot> getDoctorSlots(Integer doctorId) {
-        return slotRepository.findByDoctorId(doctorId);
+        return slotRepository.findByDoctor_IdOrderBySlotDateAscStartTimeAsc(doctorId);
     }
 
     // ================= GET AVAILABLE SLOTS =================
@@ -92,5 +100,26 @@ public class SlotService {
         }
 
         slotRepository.delete(slot);
+    }
+
+    // ================= SPLIT SLOT =================
+    public void splitSlot(){
+        List<UserSlot> allSlot = slotRepository.findAll();
+
+        for (UserSlot slot : allSlot){
+            String txt = slot.getTimeSlot();
+
+            if (txt != null && txt.contains("-")){
+                try {
+                    String[] sp = txt.split("-");
+
+                    slot.setStartTime(LocalTime.parse(sp[0].trim()));
+                    slot.setEndtime(LocalTime.parse(sp[1].trim()));
+                    slotRepository.save(slot);
+                } catch(Exception e){
+                System.out.println("Skipping : " + txt);
+            }
+        }
+      }
     }
 }

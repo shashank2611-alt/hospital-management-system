@@ -5,6 +5,7 @@ import com.example.hospital.DTO.MyAppointmentDTO;
 import com.example.hospital.Module.UserAppointment;
 import com.example.hospital.DTO.UserAppointmentDTO;
 import com.example.hospital.Service.AppointmentService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +47,14 @@ public class AppointmentController {
         return appointmentService.getSlot(slotId);
     }
 
+    @PostMapping("/doctor/delay")
+    public ResponseEntity<String> handleDelay(@RequestParam int doctorId, @RequestParam int minutes) {
+        String message = appointmentService.delayDoctor(doctorId, minutes);
+        return ResponseEntity.ok(message);
+    }
 
-
+    @PutMapping("/arrived/{appointmentId}")
+    public String arrived(@PathVariable Integer appointmentId) {
+        return appointmentService.markArrived(appointmentId);
+    }
 }

@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -66,5 +67,11 @@ public class SlotController {
     public List<weekDays>getDoctorAvailableDays(
             @PathVariable Integer doctorId) {
         return slotRepository.findAvailableDays(doctorId);
+    }
+
+    @GetMapping("/SplitSlot")
+    public String triggerSplit() {
+        slotService.splitSlot();
+        return "Slots updated successfully!";
     }
 }

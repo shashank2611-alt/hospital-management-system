@@ -13,7 +13,7 @@ public interface SlotRepository extends JpaRepository<UserSlot, Integer> {
     List<UserSlot> findByDoctorId(Integer doctorId);
 
     List<UserSlot> findByBookedFalse();
-
+    List<UserSlot> findByDoctor_IdOrderBySlotDateAscStartTimeAsc(Integer doctorId);
     @Query("SELECT DISTINCT s.doctor.department FROM UserSlot s")
     List<String> findDistinctByDept();
 

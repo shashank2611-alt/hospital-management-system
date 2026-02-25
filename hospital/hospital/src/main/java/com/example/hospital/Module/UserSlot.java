@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @Entity
@@ -31,6 +32,8 @@ public class UserSlot {
 
     @Column(name = "time_slot", nullable = false)
     private String timeSlot;
+    private LocalTime startTime;
+    private LocalTime endtime;
 
     @Column(nullable = false, length = 20)
     private String mode; // SINGLE / WEEK
@@ -42,6 +45,5 @@ public class UserSlot {
     @JoinColumn(name = "doctor_id", nullable = false)
     @JsonIgnore
     private DoctorDetails doctor;
-
 
 }
